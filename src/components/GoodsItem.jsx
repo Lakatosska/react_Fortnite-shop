@@ -1,28 +1,26 @@
 function GoodsItem(props) {
   
   // по умолчанию goods - пустой массив
-  const { mainId, displayName, displayDescription, price, displayAssets } = props;
+  const { mainId, displayName, displayDescription, displayAssets, price} = props;
 
   return(
-    <div className="row">
-      <div className="col s12 m7">
-        <div className="card">
-          <div className="card-image">
-            <img src="images/sample-1.jpg" />
-            <span className="card-title">Card Title</span>
-          </div>
-          <div className="card-content">
-            <p>I am a very simple card. I am good at containing small bits of information.
-            I am convenient because I require little markup to use effectively.</p>
-          </div>
-          <div className="card-action">
-            <a href="#">This is a link</a>
-          </div>
-        </div>
+    <div className="card" id={mainId}>
+      <div className="card-image">
+      <img src={displayAssets[0].full_background} alt={displayName}/>
+        <span className="card-title">{displayName}</span>
       </div>
-    </div>
+      <div className="card-content">
+        <p>
+          {displayDescription}
+        </p>
+      </div>
+      <div className="card-action">
+        <button className="btn">Купить</button>
+        <span className="right">{price.regularPrice}</span>
+      </div>
+    </div>        
+    
   )
-
 }
 
 export { GoodsItem };
