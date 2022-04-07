@@ -3,6 +3,7 @@ import { API_KEY, API_URL } from '../config';
 import { Preloader } from './Preloader';
 import { GoodsList } from './GoodsList';
 import { Cart } from './Cart';
+import { BasketList } from './BasketList';
 
 function Shop() {
 
@@ -15,11 +16,21 @@ function Shop() {
   // список заказов
   const [order, setOrder] = useState([]);
 
+  console.log(order);
+
+  const [isBasketShow, setBasketShow] = useState(false);
+
+  const handleBasketShow = () => {
+    setBasketShow(!isBasketShow)
+  }
+
   // функция добавления товара в корзину, потом спускаем ее через пропсы в GoodsList
   const addToBasket = (item) => {
 
     // обходим наши заказы методом findIndex, если не находим индекс товара в индексе заказанного товара, то...
-    const itemIndex = order.findIndex(orderItem => orderItem.id === item.id)
+    const itemIndex = order.findIndex(
+      (orderItem) => orderItem.mainId === item.mainId
+    );
 
     if (itemIndex < 0) {
       // ... товар добавляется первый раз (поэтому нужна проверка, чтоб quantity наращивать)
@@ -27,7 +38,7 @@ function Shop() {
       const newItem = {
         ...item,
         quantity: 1,
-      }
+      };
       // возвращает массив, который уже сейчас есть, и добавляет туда новый объект
       // т.о. у нас массив объектов и каждый раз добавляем 1 новый
       setOrder([...order, newItem]);
@@ -35,23 +46,23 @@ function Shop() {
       // если товар уже в корзине, то тогда изменяем значение quantity, все остальные значения - без изменений
       // т.о. нужно перебрать наш массив
     } else {
-      const newOrder = order.map((orderItem, index) => {
+        const newOrder = order.map((orderItem, index) => {
 
-        if(index === itemIndex) {
-          return {
-            ...orderItem,
-            quantity: orderItem.quantity + 1
+          if (index === itemIndex) {
+            return {
+              ...orderItem,
+              quantity: orderItem.quantity + 1,
+            }
+
+          } else {
+            return orderItem;
           }
-
-        } else {
-          return orderItem;
-        }
-      })
+        });
 
       // в результате сформированный массив через метод setOrder отправляем в state
       setOrder(newOrder);
     }
-  }
+  };
 
   // всегда получает функцию и массив зависимостей(он пустой, т.к. надо выполнить 1 раз)
   useEffect(function getGoods() {
@@ -67,8 +78,11 @@ function Shop() {
   }, [])
 
   return <main className='container content'>
-      <Cart quantity={order.length} />
+      <Cart quantity={order.length} handleBasketShow={handleBasketShow}/>
       {loading ? <Preloader /> : <GoodsList goods={goods} addToBasket={addToBasket}/>}
+      {
+        isBasketShow && <BasketList order={order}/>
+      }
     </main>
 }
 
