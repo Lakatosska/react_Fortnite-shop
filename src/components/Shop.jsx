@@ -64,6 +64,12 @@ function Shop() {
     }
   };
 
+  const removeFromBasket = (itemId) => {
+
+    const newOrder = order.filter(el => el.mainId !== itemId)
+    setOrder(newOrder)
+  };
+
   // всегда получает функцию и массив зависимостей(он пустой, т.к. надо выполнить 1 раз)
   useEffect(function getGoods() {
     fetch(API_URL, {
@@ -81,7 +87,7 @@ function Shop() {
       <Cart quantity={order.length} handleBasketShow={handleBasketShow}/>
       {loading ? <Preloader /> : <GoodsList goods={goods} addToBasket={addToBasket}/>}
       {
-        isBasketShow && <BasketList order={order} handleBasketShow={handleBasketShow}/>
+        isBasketShow && <BasketList order={order} handleBasketShow={handleBasketShow} removeFromBasket={removeFromBasket}/>
       }
     </main>
 }
