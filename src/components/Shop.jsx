@@ -4,6 +4,7 @@ import { Preloader } from './Preloader';
 import { GoodsList } from './GoodsList';
 import { Cart } from './Cart';
 import { BasketList } from './BasketList';
+import { Alert } from './Alert';
 
 function Shop() {
 
@@ -19,6 +20,8 @@ function Shop() {
   console.log(order);
 
   const [isBasketShow, setBasketShow] = useState(false);
+
+  const [alertName, setAlertName] = useState('');
 
   const handleBasketShow = () => {
     setBasketShow(!isBasketShow)
@@ -62,6 +65,7 @@ function Shop() {
       // в результате сформированный массив через метод setOrder отправляем в state
       setOrder(newOrder);
     }
+    setAlertName(item.displayName);
   };
 
   const removeFromBasket = (itemId) => {
@@ -100,6 +104,10 @@ function Shop() {
     setOrder(newOrder);
   }
 
+  const closeAlert = () => {
+    setAlertName('');
+  }
+
   // всегда получает функцию и массив зависимостей(он пустой, т.к. надо выполнить 1 раз)
   useEffect(function getGoods() {
     fetch(API_URL, {
@@ -115,7 +123,9 @@ function Shop() {
 
   return <main className='container content'>
       <Cart quantity={order.length} handleBasketShow={handleBasketShow}/>
-      {loading ? <Preloader /> : <GoodsList goods={goods} addToBasket={addToBasket}/>}
+      {
+      loading ? <Preloader /> : <GoodsList goods={goods} addToBasket={addToBasket}/>
+      }
       {
         isBasketShow && 
           <BasketList 
@@ -125,6 +135,9 @@ function Shop() {
             increaseQuantity={increaseQuantity}
             decreaseQuantity={decreaseQuantity}
           />
+      }
+      {
+        alertName && <Alert displayName={alertName} closeAlert={closeAlert}/>
       }
     </main>
 }

@@ -1,9 +1,4 @@
-import { useState } from "react";
-
-
 function BasketItem(props) {
-
-  const [count, setCount] = useState(0);
 
   const {
     mainId, 
